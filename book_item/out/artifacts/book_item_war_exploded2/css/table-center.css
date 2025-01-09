@@ -1,0 +1,16 @@
+.table td,
+.table th {
+    vertical-align: middle
+}
+
+table {
+    text-align: center;
+}
+
+.img-fluid{
+    width: 150px;
+    height: 100px;
+}
+.breadcrumb{
+    line-height: 15px !important;
+}

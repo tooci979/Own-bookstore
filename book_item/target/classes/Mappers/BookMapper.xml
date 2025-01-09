@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baidu.dao.BookMapper">
+    <resultMap id="BookMap" type="Book">
+        <result property="bookID" column="bookID"></result>
+        <result property="bookName" column="bookName"></result>
+        <result property="author" column="author"></result>
+        <result property="publisher" column="publisher"></result>
+        <result property="image" column="image"></result>
+        <result property="price" column="price"></result>
+
+        <association property="classify" javaType="Classify">
+            <result property="classificationId" column="classificationId"></result>
+            <result property="classificationName" column="classificationName"></result>
+        </association>
+    </resultMap>
+
+
+    <select id="getBookAll" resultMap="BookMap">
+        SELECT * from book as b,classification as c where b.classificationId = c.classificationId
+    </select>
+
+<!--    //分类筛选-->
+    <select id="getClassifyAllByType" resultMap="BookMap" >
+        SELECT * FROM  book as b,classification as c
+         where b.classificationId = c.classificationId and b.classificationId=#{id}
+    </select>
+
+    <select id="searchBookByName" resultMap="BookMap">
+        select * from book b,classification c
+        <where>
+            b.classificationId=c.classificationId
+            <if test="classificationId != ''">
+                and b.classificationId = #{classificationId}
+            </if>
+            <if test="bookName != null">
+                and b.bookName like concat('%',#{bookName},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <select id="findBookByName" resultMap="BookMap" parameterType="String">
+        select * from book b,classification c
+        where b.classificationId=c.classificationId
+        and b.bookName like concat('%',#{name},'%')
+    </select>
+<!--分页-->
+    <select id="getByPageHome" resultMap="BookMap">
+        SELECT * FROM  book as b,classification as c
+        where b.classificationId = c.classificationId
+         limit #{st},#{pa};
+    </select>
+</mapper>
